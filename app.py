@@ -49,6 +49,13 @@ class DRegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password*')
 
+class LoginForm(Form):
+    username = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
+    password = PasswordField('Password*', [
+        validators.DataRequired(), validators.Length(min=4, max=16)
+    ])
+
+
 @app.route('/psign', methods=['GET', 'POST'])
 def psign():
 	form = RegisterForm(request.form)
@@ -78,7 +85,6 @@ def psign():
 		cur.close()
 
 		#FLASH IS NOT WORKING
-		#flash('You are now registered and can log in', 'success')
 		return redirect(url_for('plog'))
 	return render_template('patient_signup.html', form = form)
 
@@ -118,18 +124,42 @@ def dsign():
 
 @app.route('/plog', methods=['GET', 'POST'])
 def plog():
-	if request.method == 'POST':
-		
-		return render_template('patient_login.html')
-	return render_template('patient_login.html')
+	form = LoginForm(request.form)
+	if(request.method == 'POST' and form.validate()):
+		username = form.username.data
+		password = form.password.data
+		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM patients WHERE patient_username = %s AND patient_password = %s", [username, password])
+		if result == 1:
+			return redirect(url_for('user', username=username))
+		else:
+			error = 'Username/Password Incorrect'
+			return render_template('patient_login.html', error = error, form = form)
+	return render_template('patient_login.html', form = form)
 
 @app.route('/dlog', methods=['GET', 'POST'])
 def dlog():
-	if request.method == 'POST':
-		return render_template('dr_login.html')
-	return render_template('dr_login.html')
+	form = LoginForm(request.form)
+	if(request.method == 'POST' and form.validate()):
+		username = form.username.data
+		password = form.password.data
+		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM doctors WHERE doc_username = %s AND doc_password = %s", [username, password])
+		if result == 1:
+			return redirect(url_for('userd', username=username))
+		else:
+			error = 'Username/Password Incorrect'
+			return render_template('dr_login.html', error = error, form = form)
+	return render_template('dr_login.html', form = form)
 
 
+@app.route('/user/<username>', methods=['GET', 'POST'])
+def user(username):
+	return render_template('pdashboard.html', un=username)
+
+@app.route('/userd/<username>', methods=['GET', 'POST'])
+def userd(username):
+	return render_template('ddashboard.html', un=username)
 
 if __name__ == '__main__':
 	app.secret_key='secret123'
