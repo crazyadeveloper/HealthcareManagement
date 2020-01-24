@@ -24,7 +24,7 @@ class RegisterForm(Form):
     name = StringField('Name*', [validators.DataRequired(),validators.Length(min=1, max=50)])
     address = StringField('Address', [validators.optional(), validators.length(min=1, max=50)])
     phone = IntegerField('Phone No*', [validators.DataRequired()])
-    email = StringField('Email*', [validators.DataRequired(),validators.Length(min=6, max=50)])
+    email = StringField('Email*', [validators.DataRequired(),validators.Length(min=6, max=50), validators.Email()])
     username = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
     sex = StringField('Gender*', [validators.DataRequired(),validators.Length(min=4, max=6)])
     blood = StringField('Blood Group', [validators.optional(), validators.Length(min=2, max=4)])
@@ -41,7 +41,7 @@ class DRegisterForm(Form):
     address = StringField('Chamber Address*', [validators.DataRequired(),validators.length(min=1, max=50)])
     phone = IntegerField('Phone No*', [validators.DataRequired()])
     fee = IntegerField('Fees*', [validators.DataRequired()])    
-    email = StringField('Email*', [validators.DataRequired(),validators.Length(min=6, max=20)])
+    email = StringField('Email*', [validators.DataRequired(),validators.Length(min=6, max=20), validators.Email()])
     username = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=10)])
     password = PasswordField('Password*', [
         validators.DataRequired(), validators.Length(min=4, max=16),
