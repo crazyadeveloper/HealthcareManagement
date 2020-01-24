@@ -85,6 +85,7 @@ def psign():
 		cur.close()
 
 		#FLASH IS NOT WORKING
+		#flash('You are now registered and can log in', 'success')
 		return redirect(url_for('plog'))
 	return render_template('patient_signup.html', form = form)
 
