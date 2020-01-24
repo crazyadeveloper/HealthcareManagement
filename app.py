@@ -64,14 +64,22 @@ def psign():
 		password = form.password.data
 
 		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM patients WHERE patient_username = %s", [username])
+		if result > 0:
+			error = 'Username found'
+			return render_template('patient_signup.html', error = error, form = form)
+		result = cur.execute("SELECT * FROM patients WHERE patient_email = %s", [email])
+		if result > 0:
+			error = 'email found'
+			return render_template('patient_signup.html', error = error, form = form)
 
 		cur.execute("INSERT INTO patients(patient_name, patient_address, patient_phno, patient_email, patient_username, patient_password, patient_bloodgroup, patient_sex, patient_age) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, address, phone, email, username, password, blood, sex, age))
 		mysql.connection.commit()
 		cur.close()
 
 		#FLASH IS NOT WORKING
-		flash('You are now registered and can log in', 'success')
-		return redirect(url_for('index'))
+		#flash('You are now registered and can log in', 'success')
+		return redirect(url_for('plog'))
 	return render_template('patient_signup.html', form = form)
 
 @app.route('/dsign', methods=['GET', 'POST'])
@@ -88,14 +96,23 @@ def dsign():
 		password = form.password.data
 
 		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM doctors WHERE doc_username = %s", [username])
+		if result > 0:
+			error = 'Username found'
+			return render_template('dr_signup.html', error = error, form = form)
+		result = cur.execute("SELECT * FROM doctors WHERE doc_email = %s", [email])
+		if result > 0:
+			error = 'email found'
+			return render_template('dr_signup.html', error = error, form = form)
+
 
 		cur.execute("INSERT INTO doctors(doctor_name ,doctor_spec ,doc_mobileNo ,doc_email ,doc_password ,doc_address ,doc_username ,doc_fees ) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)", (name, spec, phone, email, password, address, username, fee))
 		mysql.connection.commit()
 		cur.close()
 
 		#FLASH IS NOT WORKING
-		flash('You are now registered and can log in', 'success')
-		return redirect(url_for('index'))
+		#flash('You are now registered and can log in', 'success')
+		return redirect(url_for('dlog'))
 	return render_template('dr_signup.html', form=form)
 
 
@@ -108,7 +125,7 @@ def plog():
 
 @app.route('/dlog', methods=['GET', 'POST'])
 def dlog():
-	if(request.method == 'POST' and form.validate()):
+	if request.method == 'POST':
 		return render_template('dr_login.html')
 	return render_template('dr_login.html')
 
