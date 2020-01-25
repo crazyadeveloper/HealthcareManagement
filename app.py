@@ -162,6 +162,13 @@ def user(username):
 def userd(username):
 	return render_template('ddashboard.html', un=username)
 
+@app.route('/apptListdr/<username>', methods=['GET', 'POST'])
+def apptListdr(username):
+	cur = mysql.connection.cursor()
+	res2 = cur.execute("SELECT a.patient_id, p.patient_name, a.date, a.time  FROM appointments a, patients p, doctors d WHERE a.patient_id = p.patient_id AND d.doctor_id = a.doctor_id AND d.doc_username = %s", [username])
+	rv = cur.fetchall()
+	return render_template('appt_dr.html', data=rv)
+
 if __name__ == '__main__':
 	app.secret_key='secret123'
 	app.run(debug=True)
