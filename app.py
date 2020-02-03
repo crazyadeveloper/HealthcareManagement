@@ -162,14 +162,18 @@ def user(username):
 def userd(username):
 	return render_template('ddashboard.html', un=username)
 @app.route('/makeappt/<username>',methods=['GET', 'POST'])
-def makeappt(username): 
-	 cursor = mysql.connection.cursor()
- 	cur = cursor.execute("SELECT doctor_spec FROM doctors")
- 	ars = cursor.fetchall()
- 	cursr = mysql.connection.cursor()
- 	fact = cursr.execute("SELECT doctor_name , doc_address ,doc_fees FROM doctors ")
- 	dt = cursr.fetchall()
- 	return render_template('appt_pt.html', tot=ars ,total=dt)
+def makeappt(username):
+	cursor = mysql.connection.cursor()
+	cur = cursor.execute("SELECT doctor_spec FROM doctors")
+	ars = cursor.fetchall()
+	cursr = mysql.connection.cursor()
+	fact = cursr.execute("SELECT doc_username , doctor_name , doc_address ,doc_fees FROM doctors" )
+	dt = cursr.fetchall()
+	if request.method == "POST":
+		word = request.form.get("spec", None)
+		if word!=None:
+			return render_template('appt_pt.html', tot=ars ,total=dt , word= word)
+	return render_template('appt_pt.html', tot=ars , total = dt)
 
 @app.route('/apptListdr/<username>', methods=['GET', 'POST'])
 def apptListdr(username):
