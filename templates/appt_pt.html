@@ -36,41 +36,43 @@ tr:nth-child(even) {
 <br>
 <br>
 {% from "includes/_formhelpers.html" import render_field %}
- <!--{% if message %}
-        <p>{{ message }}</p>
-    {% endif %}-->
 <h3>Choose the area of Specialization</h3> 
-    <form action="/makeappt" method="POST" enctype="multipart/form-data"class="add-j">
+    <form action="/makeappt/<username>" method="POST" enctype="multipart/form-data"class="add-j">
       <dl>
-       <dd><select name="tot" id="mySelect">
+       <dd><select name="spec" id="mySelect">
         {% for j in tot %}
         <option value="{{ j.doctor_spec }}">{{ j.doctor_spec }}</option>
         {% endfor %}
         </select>
         <br><br>
-         <dd><input type=submit class="btn btn-primary" value="Submit">
+         <dd><input type=submit class="btn btn-primary" value="PROCEED">
       </dl>
     </form>
-   
 </br>
 <br>
 <table class="table container-fluid">
   		<thead class="thead">
     		<tr>
+    		  <th scope="col">Doctor Username</th>
 		      <th scope="col">Doctor Name</th>
 		      <th scope="col">Doctor Address</th>
 		      <th scope="col">Doctor Fees</th>
     		</tr>
   		</thead>
   		<tbody>
-	    {% for row in total %}
-	    <tr>
-	        {% for d in row %}
-	            <th scope="col"> {{ row[d] }} </td>
-	           {% endfor %}
-	          </tr>
-	        
+        {% if word is defined %}
+        {% for r in tot %}
+        	{% if  r.doctor_spec  ==  word %} 
+	        {% for row in total %}
+	         <tr>
+	        	{% for d in row %}
+	            	<th scope="col"> {{ row[d] }} </td>
+	          	{% endfor %}
+	         </tr>
+	        {% endfor %}
+	        {% endif %}
 	    {% endfor %}
+	    {% endif %}
   		</tbody>
 	</table>
 <br>
