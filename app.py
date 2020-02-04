@@ -192,6 +192,63 @@ def apptListdr(username):
 	rv = cur.fetchall()
 	return render_template('appt_dr.html', data=rv)
 
+class ResetForm(Form):
+	email = StringField('Email*', [validators.DataRequired(),validators.Length(min=6, max=50), validators.Email()])
+	username = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
+
+
+@app.route('/dreset', methods=['GET', 'POST'])
+def dreset():
+	form = ResetForm(request.form)
+	if(request.method == 'POST' and form.validate()):
+		email = form.email.data 
+		username = form.username.data
+		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM doctors WHERE doc_username = %s AND doc_email = %s", [username, email])
+		if result == 1:
+			def get_random_string(length=25,allowed_chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+				return ''.join(random.choice(allowed_chars) for i in range(length))
+			hashCode = get_random_string()
+			cur.execute("INSERT INTO preset(email, username, hashCode) VALUES(%s, %s, %s)", (email, username, hashCode))
+			mysql.connection.commit()
+			cur.close()  
+
+			msg = Message('Confirm Password Change', sender = 'xyz@gmail.com', recipients = [email])
+			msg.body = "Hello,\nWe've received a request to reset your password. If you want to reset your password, click the link below and enter your new password\n http://localhost:5000/" + hashCode
+			posta.send(msg)
+			message = 'Email Sent'
+			return render_template('preset.html', msg = message, form = form)
+		else:
+			error = 'Username/Email Not Found'
+			return render_template('dreset.html', error = error, form = form)
+	return render_template('dreset.html', form = form)
+
+
+@app.route('/preset', methods=['GET', 'POST'])
+def preset():
+	form = ResetForm(request.form)
+	if(request.method == 'POST' and form.validate()):
+		email = form.email.data 
+		username = form.username.data
+		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM patients WHERE patient_username = %s AND patient_email = %s", [username, email])
+		if result == 1:
+			def get_random_string(length=24,allowed_chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+				return ''.join(random.choice(allowed_chars) for i in range(length))
+			hashCode = get_random_string()
+			cur.execute("INSERT INTO preset(email, username, hashCode) VALUES(%s, %s, %s)", (email, username, hashCode))
+			mysql.connection.commit()
+			cur.close()  
+
+			msg = Message('Confirm Password Change', sender = 'xyz@gmail.com', recipients = [email])
+			msg.body = "Hello,\nWe've received a request to reset your password. If you want to reset your password, click the link below and enter your new password\n http://localhost:5000/" + hashCode
+			posta.send(msg)
+			message = 'Email Sent'
+			return render_template('preset.html', msg = message, form = form)
+		else:
+			error = 'Username/Email Not Found'
+			return render_template('preset.html', error = error, form = form)
+	return render_template('preset.html', form = form)
 
 class Reset(Form):
     password = PasswordField('Password*', [
