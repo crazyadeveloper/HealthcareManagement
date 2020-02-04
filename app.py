@@ -192,6 +192,15 @@ def apptListdr(username):
 	rv = cur.fetchall()
 	return render_template('appt_dr.html', data=rv)
 
+
+class Reset(Form):
+    password = PasswordField('Password*', [
+        validators.DataRequired(), validators.Length(min=4, max=16),
+        validators.EqualTo('confirm', message='Passwords do not match')
+    ])
+    confirm = PasswordField('Confirm Password*')
+
+
 @app.route("/<string:hashCode>",methods=["GET","POST"])
 def hashcode(hashCode):
 	form = Reset(request.form)
