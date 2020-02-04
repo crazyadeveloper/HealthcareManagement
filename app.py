@@ -3,8 +3,18 @@ from flask_mysqldb import MySQL
 from wtforms import Form, IntegerField, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
+from flask_mail import Mail, Message
+#import smtplib
+import random
 
 app = Flask(__name__)
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'xyz@gmail.com'
+app.config['MAIL_PASSWORD'] = 'xyz'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+posta = Mail(app)
 #app.secret_key = "super secret key"
 
 
@@ -181,6 +191,37 @@ def apptListdr(username):
 	res2 = cur.execute("SELECT a.patient_id, p.patient_name, a.date, a.time  FROM appointments a, patients p, doctors d WHERE a.patient_id = p.patient_id AND d.doctor_id = a.doctor_id AND d.doc_username = %s", [username])
 	rv = cur.fetchall()
 	return render_template('appt_dr.html', data=rv)
+
+@app.route("/<string:hashCode>",methods=["GET","POST"])
+def hashcode(hashCode):
+	form = Reset(request.form)
+
+	if(request.method == 'POST' and form.validate()):
+		password = form.password.data
+		
+		cur = mysql.connection.cursor()
+		result = cur.execute("SELECT * FROM preset WHERE hashCode = %s", [hashCode])
+		if result:
+			if len(hashCode) == 25:
+				cur.execute("SELECT email FROM preset WHERE hashCode = %s", [hashCode])
+				result_set = cur.fetchall()
+				for r in result_set:
+					cur.execute("UPDATE doctors SET doc_password=%s WHERE doc_email=%s", [password, r['email']])
+					print(r['email'])
+				mysql.connection.commit()
+				cur.close()
+				message = 'Password Changed'
+				return render_template('reset.html', msg = message, form = form)				
+			cur.execute("SELECT email FROM preset WHERE hashCode = %s", [hashCode])
+			result_set = cur.fetchall()
+			for r in result_set:
+				cur.execute("UPDATE patients SET patient_password=%s WHERE patient_email=%s", [password, r['email']])
+				print(r['email'])
+			mysql.connection.commit()
+			cur.close()
+			message = 'Password Changed'
+			return render_template('reset.html', msg = message, form = form)
+	return render_template('reset.html', form = form)
 
 if __name__ == '__main__':
 	app.secret_key='secret123'
