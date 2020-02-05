@@ -65,6 +65,9 @@ class LoginForm(Form):
         validators.DataRequired(), validators.Length(min=4, max=16)
     ])
 
+class  BookForm(Form) :
+	usernae = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
+	startdate = DateField("Enter the date for your appointment*", default=date.today(), format='%d/%m/%Y', validators=[DataRequired()],)
 
 @app.route('/psign', methods=['GET', 'POST'])
 def psign():
@@ -167,6 +170,38 @@ def dlog():
 @app.route('/user/<username>', methods=['GET', 'POST'])
 def user(username):
 	return render_template('pdashboard.html', un=username)
+
+@app.route('/makeappt/<username>',methods=['GET', 'POST'])
+def makeappt(username):
+	cursor = mysql.connection.cursor()
+	cur = cursor.execute("SELECT doctor_spec FROM doctors")
+	ars = cursor.fetchall()
+	form = BookForm(request.form)
+	if request.method == "POST":
+		word = request.form.get("spec", None)
+		cursr = mysql.connection.cursor()
+		fact = cursr.execute("SELECT doc_username , doctor_name , doc_address ,doc_fees FROM doctors WHERE doctor_spec = %s" , [word] )
+		drt = cursr.fetchall()
+		
+		if(request.method == 'POST' and form.validate()):
+			usernae = form.usernae.data
+			startdate = form.startdate.data
+			curo = mysql.connection.cursor()
+			curo.execute("INSERT INTO appointments (appt_date) VALUES (%s)",(startdate))
+			curo.execute("INSERT INTO appointments (doctor_id , patient_id ) SELECT doctor_id ,patient_id FROM doctors , patients WHERE doc_username = %s ",[usernae])
+			mysql.connection.commit()
+			curo.close()
+			return redirect (url_for('pbook'))
+			return render_template('appt_pt.html',tot = ars ,total=drt , word = word )
+
+		return render_template('appt_pt.html' , tot = ars ,total = drt ,word= word,form= form)
+
+	return render_template('appt_pt.html', tot = ars,form=form )
+
+
+@app.route('/pbook', methods=['GET', 'POST'])
+def pbook():
+	return render_template('fbook_pt.html' )
 
 @app.route('/userd/<username>', methods=['GET', 'POST'])
 def userd(username):
