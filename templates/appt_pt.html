@@ -33,11 +33,12 @@ tr:nth-child(even) {
   <div class="col-12 container-fluid">
 <br>
 <br>
-<br>
-<br>
-{% from "includes/_formhelpers.html" import render_field %}
+ {% include 'includes/_flashhelpers.html' %}
+
+
 <h3>Choose the area of Specialization</h3> 
-    <form action="/makeappt/<username>" method="POST" enctype="multipart/form-data"class="add-j">
+{% from "includes/_formhelpers.html" import render_field %}
+    <form action="/makeappt/<username>" method="POST" enctype="multipart/form-data" class="add-j">
       <dl>
        <dd><select name="spec" id="mySelect">
         {% for j in tot %}
@@ -75,13 +76,23 @@ tr:nth-child(even) {
 	    {% endif %}
   		</tbody>
 	</table>
-<br>
-<br>
- <form method="POST" action="">
+  {% include 'includes/_flashhelpers.html' %}
+<br>{% from "includes/_formhelpers.html" import render_field %}
+<form method="POST" action="/makeappt/<username>">
+
+ 	<div class="form-group">
+      {{render_field(form.usernae, class_="form-control")}}
+    </div>
+     <div class="form-group">
+      {{render_field(form.startdate, class_="form-control")}}
+    </div>
+    <div><input type=submit class="btn btn-primary" value="PROgvjhgjhhkCEED"></div>
     
-    <a href="/"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span>BOOK  APPOINTMENT</button> </a>
+    <!--<a href="/pbook"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span>BOOK APPOINTMENT</button> </a>-->
 
   </form>
+<br>
+ 
 </div>
 	</body>
 </html>
