@@ -324,6 +324,16 @@ def hashcode(hashCode):
 			return render_template('reset.html', msg = message, form = form)
 	return render_template('reset.html', form = form)
 
+@app.route('/pout/<username>', methods=['GET', 'POST'])
+def pout (username):
+	session.pop('username', None)
+	return redirect ('/')
+
+@app.route('/dout/<username>', methods=['GET', 'POST'])
+def dout (username):
+	session.pop('username', None)
+	return redirect ('/')
+
 if __name__ == '__main__':
 	app.secret_key='secret123'
 	app.run(debug=True)
