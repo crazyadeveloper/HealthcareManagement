@@ -167,7 +167,7 @@ def dlog():
 
 @app.route('/user/<username>', methods=['GET', 'POST'])
 def user(username):
-	return render_template('pdashboard.html', un=username)
+	return render_template('pdashboard.html', username=username)
 
 @app.route('/pout/<username>', methods=['GET', 'POST'])
 def pout (username):
@@ -219,7 +219,7 @@ def pbook():
 
 @app.route('/userd/<username>', methods=['GET', 'POST'])
 def userd(username):
-	return render_template('ddashboard.html', un=username)
+	return render_template('ddashboard.html', username=username)
 
 
 @app.route('/apptListdr/<username>', methods=['GET', 'POST'])
