@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-	<style>
-		
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <style>
+    
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -33,12 +33,10 @@ tr:nth-child(even) {
   <div class="col-12 container-fluid">
 <br>
 <br>
- {% include 'includes/_flashhelpers.html' %}
-
 
 <h3>Choose the area of Specialization</h3> 
 {% from "includes/_formhelpers.html" import render_field %}
-    <form action="/makeappt/<username>" method="POST" enctype="multipart/form-data" class="add-j">
+    <form action="/makeappt/{{ username }}" method="POST" enctype="multipart/form-data" class="add-j">
       <dl>
        <dd><select name="spec" id="mySelect">
         {% for j in tot %}
@@ -52,47 +50,47 @@ tr:nth-child(even) {
 </br>
 <br>
 <table class="table container-fluid">
-  		<thead class="thead">
-    		<tr>
-    		  <th scope="col">Doctor Username</th>
-		      <th scope="col">Doctor Name</th>
-		      <th scope="col">Doctor Address</th>
-		      <th scope="col">Doctor Fees</th>
-    		</tr>
-  		</thead>
-  		<tbody>
+      <thead class="thead">
+        <tr>
+          <th scope="col">Doctor Username</th>
+          <th scope="col">Doctor Name</th>
+          <th scope="col">Doctor Address</th>
+          <th scope="col">Doctor Fees</th>
+        </tr>
+      </thead>
+      <tbody>
         {% if word is defined %}
         {% for r in tot %}
-        	{% if  r.doctor_spec  ==  word %} 
-	        {% for row in total %}
-	         <tr>
-	        	{% for d in row %}
-	            	<th scope="col"> {{ row[d] }} </td>
-	          	{% endfor %}
-	         </tr>
-	        {% endfor %}
-	        {% endif %}
-	    {% endfor %}
-	    {% endif %}
-  		</tbody>
-	</table>
-  {% include 'includes/_flashhelpers.html' %}
-<br>{% from "includes/_formhelpers.html" import render_field %}
-<form method="POST" action="/makeappt/<username>">
+          {% if  r.doctor_spec  ==  word %} 
+          {% for row in total %}
+           <tr>
+            {% for d in row %}
+                <th scope="col"> {{ row[d] }} </td>
+              {% endfor %}
+           </tr>
+          {% endfor %}
+          {% endif %}
+      {% endfor %}
+      {% endif %}
+      </tbody>
+  </table>
+  <!-- {% include 'includes/_flashhelpers.html' %} -- >
+<br> <!-- {% from "includes/_formhelpers.html" import render_field %} -->
+<form method="POST" action="" class="kkk">
 
- 	<div class="form-group">
+  <div class="form-group">
       {{render_field(form.usernae, class_="form-control")}}
     </div>
      <div class="form-group">
       {{render_field(form.startdate, class_="form-control")}}
     </div>
-    <div><input type=submit class="btn btn-primary" value="PROgvjhgjhhkCEED"></div>
-    
-    <!--<a href="/pbook"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span>BOOK APPOINTMENT</button> </a>-->
+    <div><input type=submit class="btn btn-primary" value="Submit"></div>
+    <div> {% include 'includes/_flashhelpers.html' %} </div>
+
 
   </form>
 <br>
  
 </div>
-	</body>
+  </body>
 </html>
