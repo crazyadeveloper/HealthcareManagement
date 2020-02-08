@@ -67,10 +67,6 @@ class LoginForm(Form):
         validators.DataRequired(), validators.Length(min=4, max=16)
     ])
 
-class  BookForm(Form) :
-	usernae = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
-	startdate = DateField("Enter the date for your appointment*", default=date.today(), format='%d/%m/%Y', validators=[DataRequired()],)
-	
 @app.route('/psign', methods=['GET', 'POST'])
 def psign():
 	form = RegisterForm(request.form)
@@ -183,31 +179,38 @@ def dout (username):
 	session.pop('username', None)
 	return redirect ('/')
 
+class  BookForm(Form) :
+	usernae = StringField('Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
+	startdate = DateField("Enter the date for your appointment*", [validators.DataRequired()])
+
 @app.route('/makeappt/<username>',methods=['GET', 'POST'])
 def makeappt(username):
 	cursor = mysql.connection.cursor()
 	cur = cursor.execute("SELECT doctor_spec FROM doctors")
 	ars = cursor.fetchall()
-	form = BookForm(request.form)
-	if request.method == "POST":
-		word = request.form.get("spec", None)
-		cursr = mysql.connection.cursor()
-		fact = cursr.execute("SELECT doc_username , doctor_name , doc_address ,doc_fees FROM doctors WHERE doctor_spec = %s" , [word] )
-		drt = cursr.fetchall()
-		if(request.method == 'POST' and form.validate()):
-			usernae = form.usernae.data
-			startdate = form.startdate.data
-			curo = mysql.connection.cursor()
-			curo.execute("INSERT INTO appointments (appt_date) VALUES (%s)",(startdate))
-			curo.execute("INSERT INTO appointments (doctor_id , patient_id ) SELECT doctor_id ,patient_id FROM doctors , patients WHERE doc_username = %s AND patient_username = %s",[usernae , username])
-			mysql.connection.commit()
-			curo.close()
-			return redirect (url_for('pbook'))
-			return render_template('appt_pt.html',tot = ars ,total=drt , word = word ,form = form)
+	form2 = BookForm(request.form)
+	word = request.form.get("spec", None)
+	
+	if (request.method == "POST" and not form2.validate()):
+		#print(username)
+		cursor.execute("SELECT doc_username , doctor_name , doc_address ,doc_fees FROM doctors WHERE doctor_spec = %s" , [word] )
+	
+	drt = cursor.fetchall()		
+	
+	if(request.method == "POST" and form2.validate()):
+		usernae = form2.usernae.data
+		startdate = form2.startdate.data
+		cursor.execute("INSERT INTO appointments(doc_username, patient_username ,appt_date) VALUES (%s, %s, %s)",(usernae , username, startdate))
+		
+		mysql.connection.commit()
+		cursor.close()
+		#return redirect (url_for('pbook'))
+		msg = "appointment booked"
+		return render_template('appt_pt.html', username=username, msg = msg, form = form2, tot = ars ,total = drt ,word= word)
+		error = "Try again"
+		return render_template('appt_pt.html' , username=username, error = error, form= form2, tot = ars ,total = drt ,word= word)
 
-		return render_template('appt_pt.html' , tot = ars ,total = drt ,word= word,form= form)
-
-	return render_template('appt_pt.html', tot = ars,form=form )
+	return render_template('appt_pt.html', username=username, tot = ars ,total = drt ,word= word,form= form2)
 
 
 @app.route('/pbook', methods=['GET', 'POST'])
