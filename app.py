@@ -225,7 +225,7 @@ def userd(username):
 @app.route('/apptListdr/<username>', methods=['GET', 'POST'])
 def apptListdr(username):
 	cur = mysql.connection.cursor()
-	res2 = cur.execute("SELECT a.patient_id, p.patient_name, a.appt_date ,d.time FROM appointments a, patients p, doctors d WHERE a.patient_id = p.patient_id AND d.doctor_id = a.doctor_id AND d.doc_username = %s", [username])
+	res2 = cur.execute("SELECT a.patient_username, p.patient_name, a.appt_date ,d.time FROM appointments a, patients p, doctors d WHERE a.patient_username = p.patient_username AND d.doc_username = a.doc_username AND d.doc_username = %s", [username])
 	rv = cur.fetchall()
 	return render_template('appt_dr.html', data=rv)
 
@@ -326,6 +326,26 @@ def hashcode(hashCode):
 			message = 'Password Changed'
 			return render_template('reset.html', msg = message, form = form)
 	return render_template('reset.html', form = form)
+
+class ReportForm(Form):
+	#patient_name = StringField('Patient Username*', [validators.DataRequired(),validators.Length(min=4, max=25)])
+	data = StringField("Patient Data*", [validators.DataRequired()])
+
+@app.route('/reports/<username>', methods=['GET', 'POST'])
+def reports(username):
+	cur = mysql.connection.cursor()
+	sc = cur.execute("SELECT patient_username FROM  appointments WHERE doc_username=%s", [username])
+	pl = cur.fetchall()
+	word = request.form.get("patient_username", None)
+	form = ReportForm(request.form)
+	if(request.method == 'POST' and form.validate()):
+		data = form.data.data
+		result = cur.execute("INSERT INTO reports(prescriptions ,patient_username ,doc_username ) VALUES(%s, %s, %s)", (data, word, username))
+		mysql.connection.commit()
+		res2 = cur.execute("SELECT patient_username, prescriptions FROM reports WHERE doc_username=%s", [username])
+		rv = cur.fetchall()
+		return render_template('reports_list.html', data=rv)
+	return render_template('report.html', form=form, pl=pl)
 
 if __name__ == '__main__':
 	app.secret_key='secret123'
