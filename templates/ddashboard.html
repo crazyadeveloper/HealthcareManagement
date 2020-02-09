@@ -34,13 +34,13 @@
   <p>Click the button to see your Appointment history</p>
   <form method="POST" action="">
     
-    <a href="/apptListdr/{{ un }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> APPOINTMENTS</button> </a>
-<br>
-<div class= "Logoutdoctor container-fluid">
-  <h3>Want to Logout ?</h3>
-   <p>Click here to logout from your dashboard .</p>
-<a href="/dout/{{ un }}"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-user"></span><bold>LOGOUT</bold></button> </a>
-</div>
+    <a href="/apptListdr/{{ username }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> APPOINTMENTS</button> </a>
+
+  </form>
+
+  <form method="POST" action="">
+    
+    <a href="/reports/{{ username }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> SUBMIT </button> </a>
 
   </form>
 </div>
