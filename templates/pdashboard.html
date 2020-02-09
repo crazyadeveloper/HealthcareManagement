@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Health Care Management  </title>
+  <title>Health Care Management</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -18,7 +18,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">Online HealthCare : {{ username }}</a>
+      <a class="navbar-brand" href="#">Online HealthCare</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
@@ -32,25 +32,23 @@
   
 
 <div class="Patient container-fluid">
-  <h3>Make an Appointment</h3>
-  <p>Click the button to create an appointment</p>
-  <div>
-	<a href="/makeappt/{{ username }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> CREATE</button> </a>
-  </div>
-</div>
-
-<div class="Appt History container-fluid">
-  <h3>See Appointment History</h3>
-  <p>Click the button to see appointment history</p>
-  <div>
-  <a href="/"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> HISTORY</button> </a>
+  <h3><strong>Appointment Scheduling</strong></h3>
+  <p>Manage your appointments using your preferred calendar view which enables you to book online .</p>
+	<a href="/makeappt/{{ username }}"> <button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-user"></span> SCHEDULE</button> </a>
   </div>
 </div>
 <br>
+<div class="Appt History container-fluid">
+  <h3><strong>Appointment History</strong></h3>
+  <p>Our integeration gives a detailed description of all appointments booked by you .</p>
+  <div>
+  <a href="/pbook/{{ username }}"> <button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-user"></span> HISTORY</button> </a>
+  </div>
+</div><br>
 <div class= "Logoutpatient container-fluid">
-  <h3>Want to Logout ?</h3>
-   <p>Click here to logout from your dashboard .</p>
-<a href="/pout/{{ username }}"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-user"></span><bold>LOGOUT</bold></button> </a>
+  <h3><strong>Want to Logout  ?</strong></h3>
+   <p>Please click the button below.</p>
+<a href="/pout/{{ username }}"><button type="button" class="btn btn-danger btn-lg"><bold>LOGOUT</bold></button> </a>
 </div>
 
 </body>
