@@ -213,9 +213,12 @@ def makeappt(username):
 	return render_template('appt_pt.html', username=username, tot = ars ,total = drt ,word= word,form= form2)
 
 
-@app.route('/pbook', methods=['GET', 'POST'])
-def pbook():
-	return render_template('fbook_pt.html' )
+@app.route('/pbook/<username>', methods=['GET', 'POST'])
+def pbook(username):
+	cuh=mysql.connection.cursor()
+	duh = cuh.execute("SELECT  a.appointment_id , a.doc_username , d.doctor_spec , d.time FROM appointments a , doctors d WHERE a.doc_username = d.doc_username AND a.patient_username =%s" , [username])
+	tuh=cuh.fetchall()
+	return render_template('fbook_pt.html',username = username,fet=tuh )
 
 @app.route('/userd/<username>', methods=['GET', 'POST'])
 def userd(username):
@@ -225,9 +228,9 @@ def userd(username):
 @app.route('/apptListdr/<username>', methods=['GET', 'POST'])
 def apptListdr(username):
 	cur = mysql.connection.cursor()
-	res2 = cur.execute("SELECT a.patient_username, p.patient_name, a.appt_date ,d.time FROM appointments a, patients p, doctors d WHERE a.patient_username = p.patient_username AND d.doc_username = a.doc_username AND d.doc_username = %s", [username])
+	res2 = cur.execute("SELECT patient_username, appointment_id, appt_date  FROM appointments a WHERE  a.doc_username= %s" , [username])
 	rv = cur.fetchall()
-	return render_template('appt_dr.html', data=rv)
+	return render_template('appt_dr.html', data=rv,username=username)
 
 
 class ResetForm(Form):
@@ -344,8 +347,8 @@ def reports(username):
 		mysql.connection.commit()
 		res2 = cur.execute("SELECT patient_username, prescriptions FROM reports WHERE doc_username=%s", [username])
 		rv = cur.fetchall()
-		return render_template('reports_list.html', data=rv)
-	return render_template('report.html', form=form, pl=pl)
+		return render_template('reports_list.html', data=rv,username=username)
+	return render_template('report.html', form=form, pl=pl,username=username)
 
 if __name__ == '__main__':
 	app.secret_key='secret123'
