@@ -30,21 +30,31 @@
 </nav>  
 
 <div class="Appt History container-fluid">
-  <h3>See Appointments</h3>
+  <h3> <strong>Check Appointments</strong></h3>
   <p>Click the button to see your Appointment history</p>
   <form method="POST" action="">
     
-    <a href="/apptListdr/{{ username }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> APPOINTMENTS</button> </a>
+    <a href="/apptListdr/{{ username }}"> <button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-user"></span> APPOINTMENTS</button> </a>
 
   </form>
-
-  <h3>Update Report</h3>
+</div>
+<br>
+  <div class="Report container-fluid">
+ <h3><strong>Update Report</strong></h3>
   <p>Click the button to update Report for a Patient</p>
   <form method="POST" action="">
     
-    <a href="/reports/{{ username }}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> SUBMIT REPORT </button> </a>
+    <a href="/reports/{{ username }}"> <button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-user"></span> SUBMIT REPORT </button> </a>
 
   </form>
+
+
+</div>
+<br>
+<div class= "Logoutdoctor container-fluid">
+  <h3><strong>Want to Logout ?</strong></h3>
+   <p>Please click the button below.</p>
+<a href="/dout/{{ username }}"><button type="button" class="btn btn-danger btn-lg"><bold>LOGOUT</bold></button> </a>
 </div>
 
 
